@@ -19,4 +19,6 @@ add_executable(PROJET
         src/graph.c
         include/set.h
         src/set.c
+        include/matrix.h
+        src/matrix.c
 )
