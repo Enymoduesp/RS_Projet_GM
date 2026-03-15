@@ -38,7 +38,33 @@ graph_t * fscanf_graph ( const char * filename, const stream_mode_t mode );
 //	Is graphe G symmetric ?
 bool symmetric_graph( const graph_t * G );
 
+/**
+ * calcul la distance d'amitié entre a et b. 0 si aucun lien, 1 si ami direct et n si ami par intérmédiaire de n - 1 humain
+ * @param G le graph
+ * @param a l'humain a pour lequel on veut la distance avec b
+ * @param b l'humain b (celui qui est la "cible" à relier avec a)
+ * @param exclu la liste des personnes par lesquelles on est déjà passée
+ *
+ * @return la distance d'amitié a-->b
+ */
+int distance2p(graph_t * G, int a, int b, int * exclu);
+
+
 //	Calculate friendship distances
+/*
+ * objectif:
+* matrice ami:
+1 2 -1
+0 2 3 -1
+1 -1
+-1
+
+--> matrice distances:
+    0 1 1 2
+    1 0 1 1
+    2 1 0 2
+    0 0 0 0
+ */
 void distance_calculus ( graph_t * G );
 
 /** Print graph G :

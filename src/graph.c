@@ -174,4 +174,36 @@ bool symmetric_graph( const graph_t * G )
     return true;
 }
 
-void distance_calculus ( graph_t * G );
+int distance2p(graph_t * G, int a, int b, int * exclu)
+{
+    int i, d;
+    int nbGens = G->num_vertices;
+    int minD = nbGens; //on ini au nombre de gens car si ya n personne, ami par lien de max n personne donc n - 1 lien
+    exclu[a] = 1; //on ajoute a dans la liste des exclu
+    if (G->adjacencies[a * nbGens + b] == 1) // cas de base, si a ami avec b on retourne 1, ami direct
+        return 1;
+    for (i = 0; i < nbGens; i++) //sinon on parcourt chaque humain
+    {
+        if (exclu[i] == 0) //pour éviter boucle infinie si a ami avec b et b ami avec a
+//si 0 ami avec 1, 1 ami avec 0 et 2, on aura d = 1 + distance(1, 2)
+//mais distance (1,2) aura au premier tour d = 1 + distance (0, 2)
+        {
+            if (G->adjacencies[a * nbGens + i] == 1) // si a est ami avec i
+            {
+                d = 1 + distance2p(G, i, b, exclu); //alors distance d'ami = distance d'ami entre i et b + 1
+                if (d < minD && d != 1)   //si le nouveau d est plus petit que le dernier trouvé, et distance(i, b) != 0
+                {
+                    minD = d;
+                }
+            }
+        }
+    }
+    if (minD == nbGens) //si on a pas trouvé de minD, de lien indirect entre a et b
+        return 0;
+    return minD; //sinon...
+}
+
+void distance_calculus ( graph_t * G )
+{
+
+}
