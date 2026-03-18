@@ -176,6 +176,8 @@ bool symmetric_graph( const graph_t * G )
 
 int distance2p(graph_t * G, int a, int b, int * exclu)
 {
+    if (a == b)
+        return 0; //pas ami avec lui meme (il n'est pas fou)
     int i, d;
     int nbGens = G->num_vertices;
     int minD = nbGens; //on ini au nombre de gens car si ya n personne, ami par lien de max n personne donc n - 1 lien
@@ -203,7 +205,20 @@ int distance2p(graph_t * G, int a, int b, int * exclu)
     return minD; //sinon...
 }
 
+//voir à faire avec BFS...
 void distance_calculus ( graph_t * G )
 {
-
+    int i, j, k;
+    int nbGens = G->num_vertices;
+    int * exclu = calloc (nbGens, sizeof(int)); //on fais le tableau des personnes à exclure pdt recherche
+    for (i = 0; i < nbGens; i++)
+    {
+        for (j = 0; j < nbGens; j++)
+        {
+            iniZero(exclu, nbGens); //on met tout à 0
+            k = i * nbGens + j;
+            G->distances[k] = distance2p(G, i, j, exclu); //on appelle la fonction qui trouve la distance entre i et j
+        }
+    }
 }
+
