@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "../include/io.h" //juste pour recup le enum BIN TXT
-
+#include "../include/matrix.h"
 //	A graph is an adjacency matrix with a friendship distance matrix. Others members are optional.
 // typedef struct {
 //     int num_vertices;
@@ -181,9 +181,10 @@ int distance2p(graph_t * G, int a, int b, int * exclu)
     int i, d;
     int nbGens = G->num_vertices;
     int minD = nbGens; //on ini au nombre de gens car si ya n personne, ami par lien de max n personne donc n - 1 lien
-    exclu[a] = 1; //on ajoute a dans la liste des exclu
     if (G->adjacencies[a * nbGens + b] == 1) // cas de base, si a ami avec b on retourne 1, ami direct
         return 1;
+    exclu[a] = 1; //on ajoute a dans la liste des exclu
+    exclu[b] = 1; //car de toute façon si lien avec b il y a, il est renvoyé haut dessus
     for (i = 0; i < nbGens; i++) //sinon on parcourt chaque humain
     {
         if (exclu[i] == 0) //pour éviter boucle infinie si a ami avec b et b ami avec a
@@ -200,17 +201,19 @@ int distance2p(graph_t * G, int a, int b, int * exclu)
             }
         }
     }
+    exclu[a] = 0; // 0->1->2->3->4 et 0->2->3->4 (on aurait exclu 2 pdt la recherche sur 1) 2 chemins peuvent avoirs des sommets communs qu'il faut revisiter
     if (minD == nbGens) //si on a pas trouvé de minD, de lien indirect entre a et b
         return 0;
     return minD; //sinon...
 }
 
-//voir à faire avec BFS...
+//opti à refaire? bcp de recursivité
 void distance_calculus ( graph_t * G )
 {
     int i, j, k;
     int nbGens = G->num_vertices;
     int * exclu = calloc (nbGens, sizeof(int)); //on fais le tableau des personnes à exclure pdt recherche
+    assert(exclu);
     for (i = 0; i < nbGens; i++)
     {
         for (j = 0; j < nbGens; j++)
@@ -220,5 +223,17 @@ void distance_calculus ( graph_t * G )
             G->distances[k] = distance2p(G, i, j, exclu); //on appelle la fonction qui trouve la distance entre i et j
         }
     }
+    free(exclu);
 }
 
+void printf_graph ( const graph_t * G, const char * entete, const bool and_Distances )
+{
+    int nbGens = G->num_vertices;
+    printf("%s \n", entete);
+    printMatrix(G->adjacencies, nbGens);
+    if (and_Distances)
+    {
+        printf("\n\n\n affichage de la matrice distance : \n\n");
+        printMatrix(G->distances, nbGens);
+    }
+}
