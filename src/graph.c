@@ -235,5 +235,108 @@ void printf_graph ( const graph_t * G, const char * entete, const bool and_Dista
     {
         printf("\n\n\n affichage de la matrice distance : \n\n");
         printMatrix(G->distances, nbGens);
+        printf("\n\n");
+    }
+}
+
+set_t * friends( const graph_t * G, const int p ) //friends = ami direct théoriquement
+{
+    int nbGens = G->num_vertices;
+    set_t * f = new_set(nbGens - 1); //pas ami avec lui meme donc nbGens-1 max ami
+    int j, k;
+    for (j = 0; j < nbGens; j++)
+    {
+        k = p * nbGens + j;
+        if (G->adjacencies[k] == 1)
+            add_set(f, j);
+    }
+    return f;
+}
+
+
+/**	Coenraad Bron et Joseph Kerbosch algorithm with :
+    @param R : clique under construction, initialised with s,
+    @param P : edges friends with the last edge added to  R, initialised with N(s),
+    @param X : edges of current clique under construction, initialised to empty,
+    @param C : la clique maximal clique until now, initialised to empty ;
+
+    @result C : maximal clique in fine.	*/
+
+
+/*
+ *1,2,3 relié, 3 et 4 sinon
+BKB(R=  {/}, p = {1,2,3, 4}, x = {/})
+PX vide? NOn
+Pour v de 1 à 3
+v = 1 :
+    BKB(R = {1}, p = {2,3}, x = {/})
+    PX vide? NOn
+    pour v de 2 à 3
+    v = 2:
+        BKB(R = {1,2}, p = {3}, x = {/})
+        PX vide? Non
+        pour v de 3 à 3
+        v = 3
+            BKB (R = {1,2,3}, p ={/}, x ={/})
+            PX vide? OUi C =3
+        P / 2
+        X  = {2}
+    v = 3:
+        BKB(R = {1,3}, p ={/} x ={2})
+        PX vide?
+        P vide, pas x -> pour v allant de rien à rien = stop
+
+    P / 1
+    X ={1}
+
+v = 2:
+    BKB(R ={2}, p = {3}, x = {1})
+        BKB { R ={2, 3}, p = {/}, x = {1}
+            p vide pas x on stop
+    P / 2
+    X = [1,2}
+
+v = 3:
+    BKB (R = {3}, p = {4}, X = {1,2}
+    PX vide? non
+    pour v 1,2,4
+    v = 4 :
+        BKB { R = {3,4}, p = {/}, x = {1,2}
+            p vide, pas x on stop;
+    P / 3
+    X = {1,2,3}
+v = 4
+    BKB (R = {4}, p = {/}, x = {1,2,3})
+    PX vide OUi
+    R < C
+    Plus grand C = 3
+ */
+
+void BronKerbosch ( const graph_t * G, const set_t * R, set_t * P, set_t * X, set_t * C )
+{
+    set_t * amiDirect;
+    set_t * v;
+    set_t * Rrecu;
+    set_t * Precu;
+    set_t * Xrecu;
+    if (empty_set(P) && empty_set(X) && R->numelm > C->numelm) //si P et X vide (plus personne à ajt, personne a déjà été traité, et que la nouvelle clique est plus grande que l'ancienne max
+    {
+        dup_set(R, C); //dupplique car R est le Rrecu de l'appelant, qu'on free après
+    }
+    while (!empty_set(P)) //comme pour une liste on laisse l'ensemble "se deplacer vers la gauche" sans bouger
+    {
+        v = singleton_set(P->data[0]); //singleton avec v, le numero de la personne en tete de l'ensemble
+        Rrecu = union_set(R, v); //on ajoute v dans la clique en création
+        amiDirect = friends(G, v->data[0]); //ensemble amis direct de v
+        Xrecu = inter_set(X, amiDirect); //les amisDirect de v qui sont aussi dans X, on les a deja traité
+        Precu = inter_set(P, amiDirect); // les amisDirect de v qui sont encore dans les gens à tester
+        BronKerbosch (G, Rrecu, Precu, Xrecu, C);
+        del_set(&Rrecu); //liberation de memoire après récursivité
+        del_set(&Xrecu);
+        del_set(&Precu);
+        del_set(&amiDirect);
+        substract_set(P, v->data[0]); //on enleve v de P, on a traité ses clique
+        add_set(X, v->data[0]); //dans les exclu on ajoute v, on vient de passer par lui, on veut pas retrouver la meme clique {1,2,3} = {3,2,1}
+        del_set(&v);
     }
 }

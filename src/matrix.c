@@ -13,7 +13,7 @@ void printMatrix(int * M, int taille)
         for (j = 0; j < taille -1; j++)
         {
             if (j == 0)
-                printf(" %d  [", i); //partie gauche du "tableau"
+                printf("%2d  [", i); //partie gauche du "tableau"
             printf("%d | ", M[i * taille + j]);
         }
         printf("%d]", M[i * taille + j]);

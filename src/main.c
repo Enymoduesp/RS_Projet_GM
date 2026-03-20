@@ -11,6 +11,17 @@ int main(int argc, char *argv[]){
     graph_t * G = scanTXT_graph("../graph.data");
     distance_calculus(G);
     printf_graph(G, "pomme", true);
+    int nbGens = G->num_vertices;
+    set_t * R = new_set(nbGens);
+    set_t * X = new_set(nbGens);
+    set_t * C = new_set(nbGens);
+    set_t * P = new_set(nbGens);
+    int i;
+    for (i = 0; i < nbGens; i++)
+       add_set(P, i);
+    BronKerbosch (G, R, P, X, C);
+    print_set(C, "La clique maximale :");
+
     return 0;
 // 	#ifdef _DEBUG_0
 // 		printf ( "main starts with argv[1] = %s and argv[2] = %s\n", argv[1], argv[2] );
