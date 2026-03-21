@@ -340,3 +340,8 @@ void BronKerbosch ( const graph_t * G, const set_t * R, set_t * P, set_t * X, se
         del_set(&v);
     }
 }
+
+graph_t * list2matrix( list_t * LP, list_t * LF )
+{
+
+}
