@@ -6,6 +6,9 @@
 #include <assert.h>
 #include "../include/io.h" //juste pour recup le enum BIN TXT
 #include "../include/matrix.h"
+#include "../include/list.h"
+#include "../include/person.h"
+
 //	A graph is an adjacency matrix with a friendship distance matrix. Others members are optional.
 // typedef struct {
 //     int num_vertices;
@@ -341,7 +344,43 @@ void BronKerbosch ( const graph_t * G, const set_t * R, set_t * P, set_t * X, se
     }
 }
 
-graph_t * list2matrix( list_t * LP, list_t * LF )
+graph_t * list2matrix( list_t * LP, list_t * LF )//LP = liste de persone (personne = id + liste d'ami direct) LF inutile?
 {
-
+    int nbGens = (LP->numelm); //nombre gens = nombre d'elm dans la liste de personne
+    int i = 0, j, k;
+    list_elm_t * Pielm = LP->head; //element de liste pour I
+    graph_t * G = new_graph(nbGens);
+    iniZero(G->adjacencies, nbGens * nbGens);
+    person_t * Pi; //personne i
+    list_elm_t * Felm; //elm de liste pour ami de I
+    person_t * F; //personne ami de I
+    list_elm_t * Pjelm; //elm de liste personne J
+    person_t * Pj; //personne J
+    while (Pielm !=NULL) //tant qu'on a des personnes à traiter dans la liste (== de ligne à remplir)
+    {
+        Pi = Pielm->datum; //personne i = lapersonne pointé par elm de liste i
+        Felm = Pi->friends->head; //elm d'ami commence en tete de la liste d'ami de i
+        while (Felm != NULL) //tant qu'il y a des ami de i à traiter
+        {
+            F = Felm->datum; //personne qui est ami de i
+            Pjelm = LP->head;   //element Pj, on commence sur le debut de la liste de personne pour tout parcourir et faire correspondre le j
+            j = 0; //on commence à la personne 0
+            while (Pjelm != NULL) //tant qu'on a pas fais toutes les personnes
+            {
+                Pj = Pjelm->datum; //personne j est celle pointé par Pjelm...
+                if (cmp_person(Pj, F) == 0) // si la personne num j est bien celle qui est ami de i
+                {
+                    k = i * nbGens + j;
+                    G->adjacencies[k] = 1; //on remplit dans la matrice
+                    break; //on passe au prochain ami (Felm = Felm->suc)
+                }
+                j++; //on passe à la personne suivante
+                Pjelm = Pjelm->suc; //Pjelm est donc mtn le suivant
+            }
+            Felm = Felm->suc; //On passe à l'ami d'après
+        }
+        Pielm = Pielm->suc; // on passe à l'humain d'apèrs à traiter
+        i++; //on passe au prochain, à la prochaine ligne à remplir donc
+    }
+    return G;
 }
