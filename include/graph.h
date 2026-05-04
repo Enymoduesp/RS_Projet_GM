@@ -87,4 +87,7 @@ void BronKerbosch ( const graph_t * G, const set_t * R, set_t * P, set_t * X, se
 
 /** Cast list representation to adjacency matrix representation */
 graph_t * list2matrix( list_t * LP, list_t * LF );
+
+
+//rajouter les fonctions d'écriture de FICHIERS à partir du graph.
 #endif //PROJET_GRAPH_H
