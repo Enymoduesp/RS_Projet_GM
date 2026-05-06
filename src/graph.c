@@ -183,7 +183,7 @@ int distance2p(graph_t * G, int a, int b, int * exclu)
         return 0; //pas ami avec lui meme (il n'est pas fou)
     int i, d;
     int nbGens = G->num_vertices;
-    int minD = nbGens; //on ini au nombre de gens car si ya n personne, ami par lien de max n personne donc n - 1 lien
+    int minD = nbGens; //on ini au nombre de gens car si ya n personne, ami par lien de max n personne donc n - 1 lien, si distance min > distance max possible alors pas ami
     if (G->adjacencies[a * nbGens + b] == 1) // cas de base, si a ami avec b on retourne 1, ami direct
         return 1;
     exclu[a] = 1; //on ajoute a dans la liste des exclu
@@ -205,6 +205,7 @@ int distance2p(graph_t * G, int a, int b, int * exclu)
         }
     }
     exclu[a] = 0; // 0->1->2->3->4 et 0->2->3->4 (on aurait exclu 2 pdt la recherche sur 1) 2 chemins peuvent avoirs des sommets communs qu'il faut revisiter
+    exclu[b] = 0; //pour les prochains test, quand on caclulera par ex distance(G, a2,b2, exclu)
     if (minD == nbGens) //si on a pas trouvé de minD, de lien indirect entre a et b
         return 0;
     return minD; //sinon...
@@ -217,11 +218,11 @@ void distance_calculus ( graph_t * G )
     int nbGens = G->num_vertices;
     int * exclu = calloc (nbGens, sizeof(int)); //on fais le tableau des personnes à exclure pdt recherche
     assert(exclu);
+    iniZero(exclu, nbGens); //on met tout à 0
     for (i = 0; i < nbGens; i++)
     {
         for (j = 0; j < nbGens; j++)
         {
-            iniZero(exclu, nbGens); //on met tout à 0
             k = i * nbGens + j;
             G->distances[k] = distance2p(G, i, j, exclu); //on appelle la fonction qui trouve la distance entre i et j
         }
