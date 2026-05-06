@@ -145,5 +145,4 @@ void add_set( set_t * S, const int e )
             S->numelm++;
         }
     }
-
 }
