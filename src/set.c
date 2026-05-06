@@ -127,10 +127,7 @@ void substract_set( set_t * S, const int e )
         {
             if (e == S->data[i])
             {
-                for ( j = i; j < S->numelm - 1; j++)
-                {
-                    S->data[j] = S->data[j + 1]; //on pourrait échanger avec le dernier car ensemble donc plus rapide?
-                }
+                S->data[i] = S->data[S->numelm - 1]; //opti, plutot que tout décaler, ordre inutile en ensemble alors on inverse avec le dernier
                 S->numelm--;
                 break;
             }
@@ -142,7 +139,7 @@ void add_set( set_t * S, const int e )
 {
     if (S->numelm < S->max_numelm)
     {
-        if (!in_set(e, S))
+        if (!in_set(e, S)) //s'il est pas encore dans l'ensemble, on l'ajoute
         {
             S->data[S->numelm] = e;
             S->numelm++;
