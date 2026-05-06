@@ -127,7 +127,7 @@ void substract_set( set_t * S, const int e )
         {
             if (e == S->data[i])
             {
-                S->data[i] = S->data[S->numelm - 1]; //opti, plutot que tout décaler, ordre inutile en ensemble alors on inverse avec le dernier
+                S->data[i] =  S->data[S->numelm - 1]; //opti, plutot que tout décaler, ordre inutile en ensemble alors on inverse avec le dernier
                 S->numelm--;
                 break;
             }
