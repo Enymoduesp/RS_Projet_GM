@@ -6,7 +6,7 @@
 #include "friendship.h"
 #include "person.h"
 
-typedef enum { BIN, TEXT } stream_mode_t;
+typedef enum { BIN, TXT } stream_mode_t;
 
 list_t * stream_2_person_list(char * filename, stream_mode_t mode);
 list_t * stream_2_friendship_list(char * filename, stream_mode_t mode, list_t * Lpers);

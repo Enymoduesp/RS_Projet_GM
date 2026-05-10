@@ -5,7 +5,7 @@
 #ifndef PROJET_SET_H
 #define PROJET_SET_H
 #define BUD_END -1 // La fin de l'ensemble
-
+#include <stdbool.h>
 //	An integer set is a memory vector of size max_numelm
 typedef struct {
     int numelm;
@@ -25,14 +25,16 @@ set_t * singleton_set( const int elm );
 //	Delete an existing set
 void del_set( set_t ** ptrSet );
 
+//	Is set S empty ?
+bool empty_set( const set_t * S );
+
 //	Print an existing set
 void print_set( const set_t * S, char * entete );
 
-//	Is set S empty ?
-int numelm_set( const set_t * S );
+
 
 //	Is element e in set S ?
-int in_set( const int e, const set_t * S );
+bool in_set( const int e, const set_t * S );
 
 //	Union of 2 sets
 set_t * union_set( const set_t * S1, const set_t * S2 );
