@@ -120,7 +120,7 @@ set_t * inter_set( const set_t * S1, const set_t * S2 )
 
 void substract_set( set_t * S, const int e )
 {
-    int i,j;
+    int i;
     if (!empty_set(S))
     {
         for (i = 0; i < S->numelm; i++)
