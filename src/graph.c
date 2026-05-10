@@ -197,7 +197,7 @@ int distance2p(graph_t * G, int a, int b, int * exclu)
             if (G->adjacencies[a * nbGens + i] == 1) // si a est ami avec i
             {
                 d = 1 + distance2p(G, i, b, exclu); //alors distance d'ami = distance d'ami entre i et b + 1
-                if (d < minD && d != 1)   //si le nouveau d est plus petit que le dernier trouvé, et distance(i, b) != 0
+                if (d < minD && d != 0)   //si le nouveau d est plus petit que le dernier trouvé, et distance(i, b) != -1
                 {
                     minD = d;
                 }
@@ -207,7 +207,7 @@ int distance2p(graph_t * G, int a, int b, int * exclu)
     exclu[a] = 0; // 0->1->2->3->4 et 0->2->3->4 (on aurait exclu 2 pdt la recherche sur 1) 2 chemins peuvent avoirs des sommets communs qu'il faut revisiter
     exclu[b] = 0; //pour les prochains test, quand on caclulera par ex distance(G, a2,b2, exclu)
     if (minD == nbGens) //si on a pas trouvé de minD, de lien indirect entre a et b
-        return 0;
+        return -1;
     return minD; //sinon...
 }
 
