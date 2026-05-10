@@ -340,7 +340,7 @@ void BronKerbosch ( const graph_t * G, const set_t * R, set_t * P, set_t * X, se
     }
 }
 
-graph_t * list2matrix( list_t * LP, list_t * LF )//LP = liste de persone (personne = id + liste d'ami direct) LF inutile?
+graph_t * list2matrix( list_t * LP)//LP = liste de persone (personne = id + liste d'ami direct) LF inutile
 {
     int nbGens = (LP->numelm); //nombre gens = nombre d'elm dans la liste de personne
     int i = 0, j, k;

@@ -24,7 +24,7 @@ int main(int argc, char * argv[]) {
     do {
         // on convertit en matrice juste pour savoir si le graphe est symétrique
         // comme ça le menu s'adapte (distances et clique max seulement si réciprocité)
-        graph_t * Gtmp = list2matrix(Lpers, Lfriends);
+        graph_t * Gtmp = list2matrix(Lpers);
         int sym = symmetric_graph(Gtmp);
         del_graph(&Gtmp);
 
@@ -128,7 +128,7 @@ int main(int argc, char * argv[]) {
             }
 
             case 7: {
-                graph_t * G = list2matrix(Lpers, Lfriends);
+                graph_t * G = list2matrix(Lpers);
                 printf_graph(G, "Graphe d'adjacences", false);
                 del_graph(&G);
                 break;
@@ -136,7 +136,7 @@ int main(int argc, char * argv[]) {
 
             case 8: {
                 if (!sym) { printf("Choix invalide.\n"); break; }
-                graph_t * G = list2matrix(Lpers, Lfriends);
+                graph_t * G = list2matrix(Lpers);
                 distance_calculus(G);
                 printf_graph(G, "Distances d'amitie", false);
                 del_graph(&G);
@@ -145,7 +145,7 @@ int main(int argc, char * argv[]) {
 
             case 9: {
                 if (!sym) { printf("Choix invalide.\n"); break; }
-                graph_t * G = list2matrix(Lpers, Lfriends);
+                graph_t * G = list2matrix(Lpers);
                 int n = G->num_vertices;
                 set_t * R = new_set(n);
                 set_t * P = new_set(n);
