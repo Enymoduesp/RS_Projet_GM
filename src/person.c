@@ -5,7 +5,7 @@
 
 #include "../include/person.h"
 #include "../include/friendship.h"
-#include "io.h"
+#include "../include/io.h"
 
 person_t * new_person () {
 	person_t * P = calloc ( 1, sizeof(person_t) );

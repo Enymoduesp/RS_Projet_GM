@@ -12,9 +12,12 @@ list_elm_t * new_list_elm ( void * datum ) {
 }
 
 void del_list_elm ( list_elm_t ** ptrE, void (*ptrf) () ) {
-  /**
-  * @todo
-  */
+  assert(ptrE && *ptrE);
+    if (ptrf) {
+      ptrf((*ptrE)->datum);
+    }
+  free(*ptrE);
+  *ptrE = NULL;
 }
 
 list_elm_t * get_suc ( list_elm_t * E ) {
@@ -23,9 +26,8 @@ list_elm_t * get_suc ( list_elm_t * E ) {
 }
 
 list_elm_t * get_pred ( list_elm_t * E ) {
-  /**
-  * @todo
-  */
+  assert(E);
+  return E->pred;
 }
 
 void * get_data ( list_elm_t * E ) {
@@ -39,9 +41,8 @@ void set_suc ( list_elm_t * E, list_elm_t * S ) {
 }
 
 void set_pred ( list_elm_t * E, list_elm_t * P ) {
-  /**
-  * @todo
-  */
+  assert(E);
+  E->pred = P;
 }
 
 void set_data ( list_elm_t * E, void * data ) {
