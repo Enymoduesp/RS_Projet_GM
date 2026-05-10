@@ -12,9 +12,6 @@ typedef struct {
     int num_vertices;
     int * adjacencies;
     int * distances;
-    int * gaps;
-    int * connections;
-    int far_from;
 } graph_t;
 
 //	A brand new graph

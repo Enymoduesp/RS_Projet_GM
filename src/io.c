@@ -11,6 +11,7 @@
 /**
 	@note une zone tampon utile aux fichiers binaires
 */
+
 typedef struct {
 	char nameA[LG];
 	char forenameA[LG];

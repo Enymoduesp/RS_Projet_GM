@@ -153,9 +153,11 @@ void insert_after ( list_t * L, void * datum, list_elm_t * place) {
   assert (L);
   if ( empty_list ( L ) || !place ) {
     cons ( L, datum );
-  } else if ( place == L->tail ) {
+  }
+  else if ( place == L->tail ) {
     queue ( L, datum );
-  } else {
+  }
+  else {
     list_elm_t * E = new_list_elm( datum );
     E->pred = place;
     E->suc = place->suc;

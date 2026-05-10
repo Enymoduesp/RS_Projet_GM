@@ -37,7 +37,7 @@ int main(int argc, char * argv[]) {
         printf("6. Supprimer une amitie\n");
         printf("7. Afficher le graphe\n");
         if (sym) {
-            printf("8. Afficher les distances d'amitie\n"); //on peut le faire tout le temps mais le sujet demande uniquement si symétrique?
+            printf("8. Afficher les distances d'amitie\n");
             printf("9. Afficher la clique maximale\n");
         }
         printf("0. Quitter\n");
@@ -138,7 +138,7 @@ int main(int argc, char * argv[]) {
                 if (!sym) { printf("Choix invalide.\n"); break; }
                 graph_t * G = list2matrix(Lpers, Lfriends);
                 distance_calculus(G);
-                printf_graph(G, "Distances d'amitie", true);
+                printf_graph(G, "Distances d'amitie", false);
                 del_graph(&G);
                 break;
             }
