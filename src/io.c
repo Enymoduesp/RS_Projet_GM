@@ -23,7 +23,7 @@ list_t * stream_2_person_list ( char * filename, stream_mode_t mode ) {
 	list_t * L = new_list();
 	person_t * P;
 
-	if(mode == TEXT)
+	if(mode == TXT)
 		fd = fopen(filename, "r");
 	else
 		fd = fopen(filename, "rb");
@@ -43,7 +43,7 @@ list_t * stream_2_friendship_list ( char * filename, stream_mode_t mode, list_t 
 	list_t * L = new_list();
 	friendship_t * F;
 
-	if(mode == TEXT)
+	if(mode == TXT)
 		fd = fopen(filename, "r");
 	else
 		fd = fopen(filename, "rb");
@@ -63,7 +63,7 @@ person_t * person_from_stream ( FILE * stream, stream_mode_t mode ) {
 
 	assert(stream);
 
-	if(mode == TEXT){
+	if(mode == TXT){
 		P = new_person();
 
 		if(fscanf(stream, "%s %s %d/%d/%d",
@@ -95,7 +95,7 @@ void person_2_stream(person_t * P, FILE * fd, stream_mode_t mode){
 	assert(P);
 	assert(fd);
 
-	if(mode == TEXT){
+	if(mode == TXT){
 
 		fprintf(fd, "%s %s %d/%d/%d\n",
 			P->name,
@@ -126,7 +126,7 @@ friendship_t * friendship_from_stream(FILE * stream, stream_mode_t mode, list_t 
 	assert(stream);
 	assert(Lpers);
 
-	if(mode == TEXT){
+	if(mode == TXT){
 		if(fscanf(stream, "%s %s %s %s",
 			buff.nameA,
 			buff.forenameA,
