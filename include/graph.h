@@ -45,7 +45,7 @@ bool symmetric_graph( const graph_t * G );
  * @param b l'humain b (celui qui est la "cible" à relier avec a)
  * @param exclu la liste des personnes par lesquelles on est déjà passée
  *
- * @return la distance d'amitié a-->b
+ * @return la distance d'amitié a-->b (0 si a = b,  -1 si aucun chemin)
  */
 int distance2p(graph_t * G, int a, int b, int * exclu);
 
