@@ -39,6 +39,13 @@ graph_t * fscanf_graph ( const char * filename, const stream_mode_t mode );
  */
 void fprintGraphTXT ( graph_t * G, const char * filename );
 
+/**
+ *  Ecris le graphique dans un fichier binaire, sous la meme forme que le graph.dta
+ * @param G le graphique à ecrire dans le fichier
+ * @param filename  nom du fichier
+ */
+void fprintGraphBIN ( graph_t * G , const char * filename );
+
 //	Is graphe G symmetric ?
 bool symmetric_graph( const graph_t * G );
 

@@ -175,6 +175,30 @@ void fprintGraphTXT ( graph_t * G , const char * filename )
     fclose (fd) ;
 }
 
+void fprintGraphBIN ( graph_t * G , const char * filename )
+{
+    int i, j, k;
+    int moinsUn = -1; //car besoin d'un endroit où lire les octets
+    FILE * fd = fopen ( filename , "wb");
+    assert ( fd );
+    fwrite (&G->num_vertices , sizeof (int) , 1, fd ); //adresse car on veut savoir où lire les octets à écrire
+    for (i = 0; i < G->num_vertices; i++) //parcours chaque ligne de la matrice d'adjacences
+    {
+        for (j = 0; j < G->num_vertices; j++) //parcours chaque colonne
+        {
+            k = i * G->num_vertices + j;
+            if (G->adjacencies[k] == 1) //si i ami avec j
+            {
+                fwrite (&j, sizeof (int), 1, fd);
+            }
+        }
+        fwrite (&moinsUn, sizeof (int), 1, fd);
+    }
+    fclose ( fd ) ;
+}
+
+
+
 bool symmetric_graph( const graph_t * G )
 {
     int i, j;

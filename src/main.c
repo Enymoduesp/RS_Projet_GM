@@ -23,7 +23,25 @@ int main(int argc, char *argv[]){
     print_set(C, "La clique maximale :");
 
     fprintGraphTXT(G, "../test.txt");
-    printf("on a ecris dans le fichier youpi");
+    printf("\n on a ecris dans le fichier youpi \n");
+
+    fprintGraphBIN(G, "../test.bin");
+    printf("\n on a écrit le binaire \n");
+
+    graph_t * Gb = scanBIN_graph("../test.bin");
+    distance_calculus(Gb);
+    printf_graph(Gb, "pomme", true);
+    int nbGensb = Gb->num_vertices;
+    set_t * Rb = new_set(nbGensb);
+    set_t * Xb = new_set(nbGensb);
+    set_t * Cb = new_set(nbGensb);
+    set_t * Pb = new_set(nbGensb);
+    for (i = 0; i < nbGensb; i++)
+        add_set(Pb, i);
+    BronKerbosch (Gb, Rb, Pb, Xb, Cb);
+    printf("\n on a lu \n");
+
+
 
 
     return 0;
