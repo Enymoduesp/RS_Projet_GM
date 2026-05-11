@@ -29,10 +29,6 @@ graph_t * new_graph ( const int nb_vertices )
      assert(g->adjacencies);
     g->distances = calloc(nb_vertices * nb_vertices, sizeof(int)); // matrice des distances d'amitié
     assert(g->distances);
-    g->gaps = NULL; //KESAQO???? A REMPLIR
-    g->connections = calloc(nb_vertices, sizeof(int)); // g[0] = nombre d'amis direct de humain 0
-    assert(g->connections);
-    g->far_from = 0; // KESAQO????????? A REMPLIR
     return g;
 }
 
@@ -41,8 +37,6 @@ void del_graph ( graph_t ** ptrG )
     assert(ptrG && *ptrG);
     free((*ptrG) -> adjacencies);
     free((*ptrG) -> distances);
-    free((*ptrG) -> gaps);
-    free((*ptrG) -> connections);
     free(*ptrG);
     *ptrG = NULL;
 }
