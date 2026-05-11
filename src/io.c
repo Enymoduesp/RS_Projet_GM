@@ -72,7 +72,7 @@ person_t * person_from_stream ( FILE * stream, stream_mode_t mode ) {
 			&(P->birth_date.day),
 			&(P->birth_date.month),
 			&(P->birth_date.year)) != 5){
-			free_person(&P, false);
+			free_person(&P, true); // new_person() a créé P->friends, il faut le libérer aussi
 			return NULL;
 			}
 	}
@@ -80,7 +80,7 @@ person_t * person_from_stream ( FILE * stream, stream_mode_t mode ) {
 		P = new_person();
 
 		if(fread(P, sizeof(person_t), 1, stream) != 1){
-			free_person(&P, false);
+			free_person(&P, true); // même raison, new_person() a déjà alloué P->friends
 			return NULL;
 		}
 
@@ -127,7 +127,8 @@ friendship_t * friendship_from_stream(FILE * stream, stream_mode_t mode, list_t 
 	assert(Lpers);
 
 	if(mode == TEXT){
-		if(fscanf(stream, "%s %s %s %s",
+		// %*s lit et jette "aime" qui est entre les deux noms dans le fichier texte
+		if(fscanf(stream, "%s %s %*s %s %s",
 			buff.nameA,
 			buff.forenameA,
 			buff.nameB,
@@ -156,6 +157,8 @@ friendship_t * friendship_from_stream(FILE * stream, stream_mode_t mode, list_t 
 	F = new_friendship();
 	F->A = A;
 	F->B = B;
+	// même logique que scan_friendship : A aime B donc B dans les amis de A
+	queue(A->friends, B);
 
 	return F;
 }

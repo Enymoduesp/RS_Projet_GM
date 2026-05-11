@@ -20,14 +20,17 @@ friendship_t * scan_friendship(list_t * Lpers){
 	person_t * P = scan_person();
 	person_t * P1 = find (Lpers, P, &cmp_person);
 	assert ( P1 );
-	free_person (&P, NULL);
+	free_person (&P, true); // P est un temporaire créé par scan_person, on libère tout
 	F->A = P1;
 	printf(" et \n");
 	P = scan_person();
 	person_t * P2 = find (Lpers, P, &cmp_person);
 	assert(P2);
-	free_person(&P, NULL);
+	free_person(&P, true); // idem
 	F->B = P2;
+	// on met à jour la liste d'amis de chaque personne
+	// A aime B donc B apparait dans les amis de A
+	queue(P1->friends, P2);
 	return F;
 }
 
