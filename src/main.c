@@ -22,6 +22,10 @@ int main(int argc, char *argv[]){
     BronKerbosch (G, R, P, X, C);
     print_set(C, "La clique maximale :");
 
+    fprintGraphTXT(G, "../test.txt");
+    printf("on a ecris dans le fichier youpi");
+
+
     return 0;
 // 	#ifdef _DEBUG_0
 // 		printf ( "main starts with argv[1] = %s and argv[2] = %s\n", argv[1], argv[2] );
