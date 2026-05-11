@@ -9,6 +9,23 @@
 #include "../include/set.h"
 #include "../include/io.h"
 
+// retire de la liste L le noeud dont le datum == ptr (comparaison d'adresses)
+static void remove_datum(list_t * L, void * ptr) {
+    list_elm_t * E = L->head;
+    while (E) {
+        if (E->datum == ptr) {
+            if (E->pred) E->pred->suc = E->suc;
+            else         L->head = E->suc;
+            if (E->suc)  E->suc->pred = E->pred;
+            else         L->tail = E->pred;
+            L->numelm--;
+            del_list_elm(&E, NULL);
+            return;
+        }
+        E = E->suc;
+    }
+}
+
 int main(int argc, char * argv[]) {
 
     if (argc < 3) {
@@ -22,8 +39,8 @@ int main(int argc, char * argv[]) {
     int choix;
 
     do {
-        // on convertit en matrice juste pour savoir si le graphe est symétrique
-        // comme ça le menu s'adapte (distances et clique max seulement si réciprocité)
+        // on rebuild la matrice à chaque tour pour tester la symétrie
+        // le menu s'adapte : distances et clique max seulement si graphe symétrique
         graph_t * Gtmp = list2matrix(Lpers, Lfriends);
         int sym = symmetric_graph(Gtmp);
         del_graph(&Gtmp);
@@ -37,7 +54,7 @@ int main(int argc, char * argv[]) {
         printf("6. Supprimer une amitie\n");
         printf("7. Afficher le graphe\n");
         if (sym) {
-            printf("8. Afficher les distances d'amitie\n"); //on peut le faire tout le temps mais le sujet demande uniquement si symétrique?
+            printf("8. Afficher les distances d'amitie\n");
             printf("9. Afficher la clique maximale\n");
         }
         printf("0. Quitter\n");
@@ -81,13 +98,34 @@ int main(int argc, char * argv[]) {
                 while (E) {
                     if (cmp_person(E->datum, &tmp) == 0) {
                         person_t * P = E->datum;
+
+                        // on supprime toutes les amitiés liées à P avant de le supprimer
+                        // sinon Lfriends et les friends des autres auraient des pointeurs morts
+                        list_elm_t * EF = Lfriends->head;
+                        while (EF) {
+                            friendship_t * F = EF->datum;
+                            list_elm_t * next = EF->suc;
+                            if (F->A == P || F->B == P) {
+                                // si X aimait P, on retire P de la liste d'amis de X
+                                if (F->B == P) remove_datum(F->A->friends, P);
+                                if (EF->pred) EF->pred->suc = EF->suc;
+                                else          Lfriends->head = EF->suc;
+                                if (EF->suc)  EF->suc->pred = EF->pred;
+                                else          Lfriends->tail = EF->pred;
+                                Lfriends->numelm--;
+                                del_list_elm(&EF, NULL);
+                                free_friendship(&F, false);
+                            }
+                            EF = next;
+                        }
+
                         if (E->pred) E->pred->suc = E->suc;
                         else         Lpers->head  = E->suc;
                         if (E->suc)  E->suc->pred = E->pred;
                         else         Lpers->tail  = E->pred;
                         Lpers->numelm--;
                         del_list_elm(&E, NULL);
-                        free_person(&P, false);
+                        free_person(&P, true);
                         printf("Personne supprimee.\n");
                         break;
                     }
@@ -97,7 +135,6 @@ int main(int argc, char * argv[]) {
             }
 
             case 6: {
-                // on crée une amitié temporaire avec juste les noms pour la comparaison
                 person_t tmpA, tmpB;
                 printf("Nom A : ");    scanf("%s", tmpA.name);
                 printf("Prenom A : "); scanf("%s", tmpA.forename);
@@ -112,6 +149,10 @@ int main(int argc, char * argv[]) {
                 while (E) {
                     if (cmp_friendship(E->datum, &cible) == 0) {
                         friendship_t * F = E->datum;
+
+                        // F->A aimait F->B, donc F->B est dans F->A->friends : on le retire
+                        remove_datum(F->A->friends, F->B);
+
                         if (E->pred) E->pred->suc = E->suc;
                         else         Lfriends->head = E->suc;
                         if (E->suc)  E->suc->pred  = E->pred;
@@ -169,7 +210,23 @@ int main(int argc, char * argv[]) {
 
     } while (choix != 0);
 
-    del_list(&Lpers, NULL);
+    // libération des amitiés d'abord (pointeurs sur personnes, del_persons=false)
+    list_elm_t * EF = Lfriends->head;
+    while (EF) {
+        friendship_t * F = EF->datum;
+        EF = EF->suc;
+        free_friendship(&F, false);
+    }
     del_list(&Lfriends, NULL);
+
+    // libération des personnes avec leurs listes d'amis
+    list_elm_t * EP = Lpers->head;
+    while (EP) {
+        person_t * P = EP->datum;
+        EP = EP->suc;
+        free_person(&P, true);
+    }
+    del_list(&Lpers, NULL);
+
     return 0;
 }
