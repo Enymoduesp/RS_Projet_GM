@@ -58,6 +58,8 @@ recursion:\
 
 On appelle en ensuite cette fonction pour entre chaque personnes et on remplit la matrice des distances
 
+(pas utilisé de BFS car je n'en ai entendu parlé que plus tard et pas envie de tout recommencer...)
+
 ### la fonction Bronker-Bauch
 
 ````
@@ -93,10 +95,13 @@ Evidemment, puisqu'on parle de clique, tout cela ne fonctionne qu'en cas où le 
 (par exemple, quand on va mettre a jour le P pour l'appel récursif, inter(La personne, P) peut contenir des gens qui ne sont pas amis avec La personne, et la clique contiendra un lien qui ne va que dans un sens (donc pas une clique finalement))
 
 
-
-
-
-
+### list2matrix
+enfin list2matrix, qui permet de passer d'une représentation en liste à celle en matrice. \
+On parcours chaque personne de la liste à qui on associe un i. (0 pour le premier, 1 pour le deuxieme...)\
+   &emsp; Pour chaque personne on regarde chaque ami de sa liste d'ami\
+    &emsp; &emsp; on met dans une variable l'ami\
+    &emsp; &emsp; Puis On parcours toutes les personnes de la liste en partant du premier de nouveau (sans toucher au premier parcours) et en associant là aussi un j (0 pour le premier...)\
+    &emsp;&emsp;  Pour chacun, on verifie si la personne sur laquelle on est l'ami qu'on cherche. Si c'est lui, alors on met un 1 a la ligne i et colonne j
 
 
 
