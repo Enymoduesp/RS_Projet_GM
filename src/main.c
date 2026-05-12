@@ -153,15 +153,9 @@ int main(int argc, char * argv[]) {
 
 
     do {
-<<<<<<< HEAD
-        // on convertit en matrice juste pour savoir si le graphe est symétrique
-        // comme ça le menu s'adapte (distances et clique max seulement si réciprocité)
-        graph_t * Gtmp = list2matrix(Lpers);
-=======
         // on rebuild la matrice à chaque tour pour tester la symétrie
         // le menu s'adapte : distances et clique max seulement si graphe symétrique
         graph_t * Gtmp = list2matrix(Lpers, Lfriends);
->>>>>>> feature/menu
         int sym = symmetric_graph(Gtmp);
         del_graph(&Gtmp);
 
