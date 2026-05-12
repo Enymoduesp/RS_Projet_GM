@@ -68,8 +68,8 @@ int main(int argc, char * argv[]) {
                 printf("\n========== KILOGRAM ==========\n");
                 printf("1. Afficher matrice adjacences\n");
                 printf("2. Afficher matrice adjacences et distances\n");
-                printf("3. Ecrire graph dans un BIN\n");
-                printf("4. Ecrire graph dans un TXT\n");
+                printf("3. Ecrire graph dans un TXT\n");
+                printf("4. Ecrire graph dans un BIN\n");
                 if (symetric)
                     printf("5. clique maximale\n");
                 printf("0. Quitter\n");
@@ -92,13 +92,13 @@ int main(int argc, char * argv[]) {
 
                     case 3: //ecriture dans txt
                     {
-                        fprintGraphTXT(G, "../GraphEcriture.txt");
+                        fprintGraphTXT(G, "GraphEcriture.txt");
                         break;
                     }
 
                     case 4: //ecriture dans bin
                     {
-                        fprintGraphBIN(G, "../GraphEcriture.bin");
+                        fprintGraphBIN(G, "GraphEcriture.bin");
                         break;
                     }
 
