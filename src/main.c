@@ -26,8 +26,123 @@ static void remove_datum(list_t * L, void * ptr) {
     }
 }
 
+//si statique, argv[1] : fichier à traiter du graph si dynamique argv[1] = liste person et argv[2] = liste friends
 int main(int argc, char * argv[]) {
 
+    int statoudyn;
+    int choix;
+
+    if (argc < 2) //si ya pas de fichier qui a été donné à l'appel
+    {
+        printf("merci de donner un fichier à traiter");
+        return 1;
+    }
+
+    do //on demande si menu statique ou dynamique
+    {
+        printf("Mode statique ou dynamique? \n 1: statique\n 2: dynamique\n");
+        scanf("%d", &statoudyn);
+    }while (statoudyn <1 || statoudyn>2);
+
+    switch (statoudyn)
+    {
+        case 1: //cas statique
+            {
+                int binoutxt;
+                graph_t * G;
+                do
+                {
+                    printf("lire la matrice d'un fichier txt ou bin?\n 1: txt\n 2: bin\n");
+                    scanf("%d", &binoutxt);
+                }while (binoutxt <1 || binoutxt>2);
+                //on suppose argv[1] = fichier à lire
+                if (binoutxt == 1) //si c du text on lit avec la fonction pour txt
+                {
+                    G = scanTXT_graph(argv[1]);
+                }
+                else //c du BIN
+                {
+                    G = scanBIN_graph(argv[1]);
+                }
+                bool symetric = symmetric_graph(G); //pour savoir si symétrique
+                do
+                {
+                    printf("\n========== KILOGRAM ==========\n");
+                    printf("1. Afficher matrice adjacences\n");
+                    printf("2. Afficher matrice adjacences et distances\n");
+                    printf("3. Ecrire graph dans un BIN\n");
+                    printf("4. Ecrire graph dans un TXT\n");
+                    if (symetric)
+                        printf("5. clique maximale\n");
+                    printf("0. Quitter\n");
+                    printf("Choix : ");
+                    scanf("%d", &choix);
+
+                    switch (choix)
+                    {
+                        case 1: //afficher adjacences
+                            {
+                                printf_graph(G, "matrice d'adjacences", false);
+                                break;
+                            }
+                        case 2: //ajdacences + distances
+                            {
+                                distance_calculus(G); // on caclul les distances d'amitié
+                                printf_graph(G, "matrice d'adjacences puis distances", true);
+                                break;
+                            }
+
+                        case 3: //ecriture dans txt
+                            {
+                                fprintGraphTXT(G, "../GraphEcriture.txt");
+                                break;
+                            }
+
+                        case 4: //ecriture dans bin
+                            {
+                                fprintGraphBIN(G, "../GraphEcriture.bin");
+                                break;
+                            }
+
+                        case 5:
+                            {
+                                if (!symetric) //si pas symetric
+                                {
+                                    printf("mauvais choix, graph pas symetrique");
+                                    break;
+                                }
+                                //graph symetric
+                                int nbGens = G->num_vertices;
+                                //on fait les ensembles de maximum nbgens
+                                set_t * R = new_set(nbGens); //clique en construct donc rien au debut
+                                set_t * X = new_set(nbGens); //personne déja traité
+                                set_t * C = new_set(nbGens); //clique max
+                                set_t * P = new_set(nbGens); //candidat à la clique max (faut mettre tout le monde)
+                                int i;
+                                for (i = 0; i < nbGens; i++)
+                                    add_set(P, i); //on ajoute chaque humain à l'ensemble
+                                BronKerbosch (G, R, P, X, C);
+                                print_set(C, "La clique maximale :");
+                                //on libere tous les ensembles.
+                                del_set(&X);
+                                del_set(&P);
+                                del_set(&R);
+                                del_set(&C);
+                                break;
+                            }
+                    }
+                }while (choix != 0 && choix < 6);
+                del_graph(&G); //on a fini on peut libérer le graph
+                break;
+            }
+
+
+
+
+        case 2: //cas dynamique
+            //mettre tout ce qu'il y a en dessous?
+            break;
+    }
     if (argc < 3) {
         printf("Usage : %s personnes.txt amities.txt\n", argv[0]);
         return 1;
@@ -36,7 +151,6 @@ int main(int argc, char * argv[]) {
     list_t * Lpers    = stream_2_person_list(argv[1], TEXT);
     list_t * Lfriends = stream_2_friendship_list(argv[2], TEXT, Lpers);
 
-    int choix;
 
     do {
         // on rebuild la matrice à chaque tour pour tester la symétrie
