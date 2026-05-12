@@ -14,7 +14,8 @@
 
 typedef struct {
 	char nameA[LG];
-	char forenameA[LG];
+	char forenameA[
+		LG];
 	char nameB[LG];
 	char forenameB[LG];
 } buffer_t;

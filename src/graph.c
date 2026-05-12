@@ -154,6 +154,51 @@ graph_t * fscanf_graph ( const char * filename, const stream_mode_t mode )
     return scanBIN_graph ( filename );
 }
 
+void fprintGraphTXT ( graph_t * G , const char * filename )
+{
+    int i,j, k;
+    FILE * fd = fopen ( filename , "wt" ); //on ouvre le fichier sur lequel on va écrir
+    assert ( fd ); //verif que ça a bien ouvert
+    fprintf ( fd, "%d\n", G->num_vertices);
+    for (i = 0; i < G->num_vertices; i++)        //on parcours chaque ligne de la matrice d'adjences
+    {
+        for (j = 0; j < G->num_vertices; j++) //on parcours chaque colonne...
+        {
+            k = i * G->num_vertices + j;
+            if (G->adjacencies[k] == 1) //si i ami avec j
+            {
+                fprintf(fd, "%d ", j); //on écrit j dans la ligne de i
+            }
+        }
+        fprintf(fd, "-1\n"); // on écrit -1 pour terminer la ligne
+    }
+    fclose (fd) ;
+}
+
+void fprintGraphBIN ( graph_t * G , const char * filename )
+{
+    int i, j, k;
+    int moinsUn = -1; //car besoin d'un endroit où lire les octets
+    FILE * fd = fopen ( filename , "wb");
+    assert ( fd );
+    fwrite (&G->num_vertices , sizeof (int) , 1, fd ); //adresse car on veut savoir où lire les octets à écrire
+    for (i = 0; i < G->num_vertices; i++) //parcours chaque ligne de la matrice d'adjacences
+    {
+        for (j = 0; j < G->num_vertices; j++) //parcours chaque colonne
+        {
+            k = i * G->num_vertices + j;
+            if (G->adjacencies[k] == 1) //si i ami avec j
+            {
+                fwrite (&j, sizeof (int), 1, fd);
+            }
+        }
+        fwrite (&moinsUn, sizeof (int), 1, fd);
+    }
+    fclose ( fd ) ;
+}
+
+
+
 bool symmetric_graph( const graph_t * G )
 {
     int i, j;
