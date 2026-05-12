@@ -140,12 +140,12 @@ int main(int argc, char * argv[]) {
                 printf("Usage : %s personnes.txt amities.txt\n", argv[0]);
                 return 1;
             }
-            list_t * Lpers = stream_2_person_list(argv[1], TEXT);
-            list_t * Lfriends = stream_2_friendship_list(argv[2], TEXT, Lpers);
+            list_t * Lpers = stream_2_person_list(argv[1], TXT);
+            list_t * Lfriends = stream_2_friendship_list(argv[2], TXT, Lpers);
             do {
                 //on reconstruit la matrice à chaque tour pour tester la sym
                 //le menu s'adapte (c'est magnifique) distances et clique max seulement si graphe symetrique
-                graph_t * Gtmp = list2matrix(Lpers, Lfriends);
+                graph_t * Gtmp = list2matrix(Lpers);
                 int sym = symmetric_graph(Gtmp);
                 del_graph(&Gtmp);
                 printf("\n========== KILOGRAM ==========\n");
@@ -259,14 +259,14 @@ int main(int argc, char * argv[]) {
                         break;
                     }
                     case 7: {
-                        graph_t * G = list2matrix(Lpers, Lfriends);
+                        graph_t * G = list2matrix(Lpers);
                         printf_graph(G, "Graphe d'adjacences", false);
                         del_graph(&G);
                         break;
                     }
                     case 8: {
                         if (!sym) { printf("Choix invalide.\n"); break; }
-                        graph_t * G = list2matrix(Lpers, Lfriends);
+                        graph_t * G = list2matrix(Lpers);
                         distance_calculus(G);
                         printf_graph(G, "Distances d'amitie", true);
                         del_graph(&G);
@@ -274,7 +274,7 @@ int main(int argc, char * argv[]) {
                     }
                     case 9: {
                         if (!sym) { printf("Choix invalide.\n"); break; }
-                        graph_t * G = list2matrix(Lpers, Lfriends);
+                        graph_t * G = list2matrix(Lpers);
                         int n = G->num_vertices;
                         set_t * R = new_set(n);
                         set_t * P = new_set(n);
