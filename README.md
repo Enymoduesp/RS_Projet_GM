@@ -1,5 +1,4 @@
 # RS_Projet_GM
-<<<<<<< HEAD
 Si pas de compilateur dans l'IDE (CLION par exemple), utiliser le Makefile:
 Dans le terminal --> 
 Si version statique:
