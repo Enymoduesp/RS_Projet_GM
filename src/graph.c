@@ -250,7 +250,6 @@ int distance2p(graph_t * G, int a, int b, int * exclu)
     return minD; //sinon...
 }
 
-//opti à refaire? bcp de recursivité
 void distance_calculus ( graph_t * G )
 {
     int i, j, k;
@@ -283,7 +282,7 @@ void printf_graph ( const graph_t * G, const char * entete, const bool and_Dista
     }
 }
 
-set_t * friends( const graph_t * G, const int p ) //friends = ami direct théoriquement
+set_t * friends( const graph_t * G, const int p ) //friends = ami direct
 {
     int nbGens = G->num_vertices;
     set_t * f = new_set(nbGens - 1); //pas ami avec lui meme donc nbGens-1 max ami
