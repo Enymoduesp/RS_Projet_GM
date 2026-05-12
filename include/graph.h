@@ -97,7 +97,11 @@ set_t * friends( const graph_t * G, const int p );
 void BronKerbosch ( const graph_t * G, const set_t * R, set_t * P, set_t * X, set_t * C );
 
 /** Cast list representation to adjacency matrix representation */
+<<<<<<< HEAD
 graph_t * list2matrix( list_t * LP); //lf ne sert à rien si pour chaque Person de LP est associé la liste d'ami... (d'après la structure)
+=======
+graph_t * list2matrix( list_t * LP, list_t * LF );
+>>>>>>> feature/menu
 
 
 //rajouter les fonctions d'écriture de FICHIERS à partir du graph.
