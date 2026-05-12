@@ -11,11 +11,9 @@
 /**
 	@note une zone tampon utile aux fichiers binaires
 */
-
 typedef struct {
 	char nameA[LG];
-	char forenameA[
-		LG];
+	char forenameA[LG];
 	char nameB[LG];
 	char forenameB[LG];
 } buffer_t;
@@ -25,7 +23,7 @@ list_t * stream_2_person_list ( char * filename, stream_mode_t mode ) {
 	list_t * L = new_list();
 	person_t * P;
 
-	if(mode == TXT)
+	if(mode == TEXT)
 		fd = fopen(filename, "r");
 	else
 		fd = fopen(filename, "rb");
@@ -45,7 +43,7 @@ list_t * stream_2_friendship_list ( char * filename, stream_mode_t mode, list_t 
 	list_t * L = new_list();
 	friendship_t * F;
 
-	if(mode == TXT)
+	if(mode == TEXT)
 		fd = fopen(filename, "r");
 	else
 		fd = fopen(filename, "rb");
@@ -65,7 +63,7 @@ person_t * person_from_stream ( FILE * stream, stream_mode_t mode ) {
 
 	assert(stream);
 
-	if(mode == TXT){
+	if(mode == TEXT){
 		P = new_person();
 
 		if(fscanf(stream, "%s %s %d/%d/%d",
@@ -74,7 +72,7 @@ person_t * person_from_stream ( FILE * stream, stream_mode_t mode ) {
 			&(P->birth_date.day),
 			&(P->birth_date.month),
 			&(P->birth_date.year)) != 5){
-			free_person(&P, false);
+			free_person(&P, true); // new_person() a créé P->friends, il faut le libérer aussi
 			return NULL;
 			}
 	}
@@ -82,7 +80,7 @@ person_t * person_from_stream ( FILE * stream, stream_mode_t mode ) {
 		P = new_person();
 
 		if(fread(P, sizeof(person_t), 1, stream) != 1){
-			free_person(&P, false);
+			free_person(&P, true); // même raison, new_person() a déjà alloué P->friends
 			return NULL;
 		}
 
@@ -97,7 +95,7 @@ void person_2_stream(person_t * P, FILE * fd, stream_mode_t mode){
 	assert(P);
 	assert(fd);
 
-	if(mode == TXT){
+	if(mode == TEXT){
 
 		fprintf(fd, "%s %s %d/%d/%d\n",
 			P->name,
@@ -128,8 +126,9 @@ friendship_t * friendship_from_stream(FILE * stream, stream_mode_t mode, list_t 
 	assert(stream);
 	assert(Lpers);
 
-	if(mode == TXT){
-		if(fscanf(stream, "%s %s %s %s",
+	if(mode == TEXT){
+		// %*s lit et jette "aime" qui est entre les deux noms dans le fichier texte
+		if(fscanf(stream, "%s %s %*s %s %s",
 			buff.nameA,
 			buff.forenameA,
 			buff.nameB,
@@ -158,6 +157,8 @@ friendship_t * friendship_from_stream(FILE * stream, stream_mode_t mode, list_t 
 	F = new_friendship();
 	F->A = A;
 	F->B = B;
+	// même logique que scan_friendship : A aime B donc B dans les amis de A
+	queue(A->friends, B);
 
 	return F;
 }
