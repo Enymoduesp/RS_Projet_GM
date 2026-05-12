@@ -128,8 +128,17 @@ int main(int argc, char * argv[]) {
                         del_set(&C);
                         break;
                     }
+                    case 0:
+                    {
+                        printf("Au revoir !\n");
+                        break;
+                    }
+                    default:
+                    {
+                        printf("Choix invalide.\n");
+                    }
                 }
-            }while (choix != 0 && choix < 6);
+            }while (choix != 0);
             del_graph(&G); //on a fini on peut libérer le graph
             break;
         }
